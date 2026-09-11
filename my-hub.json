@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "clover.lesson10",
+  "title": "Clover Lesson 10",
+  "series": "Clover",
+  "lesson": "10",
+  "grade": 3,
+  "category": "English Classroom",
+  "type": "lesson",
+  "visibility": "limited",
+  "status": "ready",
+  "engine": "v1",
+  "teacher": true,
+  "studentExport": true,
+  "repository": "branzfamily01/clover-lesson10",
+  "sourcePath": ".",
+  "targetPath": "materials/clover/lesson10/",
+  "plannedSchoolBaseUrl": "https://english-classroom.meguro-shs-5541.workers.dev/",
+  "plannedAccessUrl": "https://english-classroom.meguro-shs-5541.workers.dev/materials/clover/lesson10/",
+  "reviewUrl": "https://branzfamily01.github.io/clover-lesson10/",
+  "updatedAt": "2026-09-11",
+  "notes": "Teacher-approved lesson. School Cloudflare Limited production is planned separately; reviewUrl remains a temporary public review surface until protected production is verified."
+}
