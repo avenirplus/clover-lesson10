@@ -15,9 +15,11 @@
   "repository": "branzfamily01/clover-lesson10",
   "sourcePath": ".",
   "targetPath": "materials/clover/lesson10/",
-  "plannedSchoolBaseUrl": "https://english-classroom.meguro-shs-5541.workers.dev/",
-  "plannedAccessUrl": "https://english-classroom.meguro-shs-5541.workers.dev/materials/clover/lesson10/",
+  "plannedNeutralOwner": "avenirplus",
+  "plannedCloudflareSubdomain": "avenirplus",
+  "plannedBaseUrl": "https://english-classroom.avenirplus.workers.dev/",
+  "plannedAccessUrl": "https://english-classroom.avenirplus.workers.dev/materials/clover/lesson10/",
   "reviewUrl": "https://branzfamily01.github.io/clover-lesson10/",
   "updatedAt": "2026-09-11",
-  "notes": "Teacher-approved lesson. School Cloudflare Limited production is planned separately; reviewUrl remains a temporary public review surface until protected production is verified."
+  "notes": "Teacher-approved lesson. The lesson remains a personal teaching asset. Planned migration is to the neutral AvenirPlus GitHub/Cloudflare naming; current URLs remain active until cutover is verified."
 }
