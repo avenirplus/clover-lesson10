@@ -12,14 +12,14 @@
   "engine": "v1",
   "teacher": true,
   "studentExport": true,
-  "repository": "branzfamily01/clover-lesson10",
+  "repository": "avenirplus/clover-lesson10",
   "sourcePath": ".",
   "targetPath": "materials/clover/lesson10/",
   "plannedNeutralOwner": "avenirplus",
   "plannedCloudflareSubdomain": "avenirplus",
   "plannedBaseUrl": "https://english-classroom.avenirplus.workers.dev/",
   "plannedAccessUrl": "https://english-classroom.avenirplus.workers.dev/materials/clover/lesson10/",
-  "reviewUrl": "https://branzfamily01.github.io/clover-lesson10/",
+  "reviewUrl": "https://avenirplus.github.io/clover-lesson10/",
   "updatedAt": "2026-09-11",
-  "notes": "Teacher-approved lesson. The lesson remains a personal teaching asset. Planned migration is to the neutral AvenirPlus GitHub/Cloudflare naming; current URLs remain active until cutover is verified."
+  "notes": "Teacher-approved lesson. GitHub owner migration to AvenirPlus is complete. Cloudflare subdomain migration to avenirplus is the remaining cutover step."
 }
