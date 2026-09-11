@@ -3,6 +3,19 @@
 const stage=document.getElementById('stage');
 if(!stage)return;
 function selected(){return String(window.getSelection?.()?.toString()||'').trim();}
+function arrangeBackupControls(){
+ const cue=stage.querySelector('.backup-cue');
+ if(!cue)return;
+ const buttons=[...stage.querySelectorAll('button')];
+ const show=buttons.find(b=>/show all/i.test((b.textContent||'').trim()));
+ const hide=buttons.find(b=>/hide one more/i.test((b.textContent||'').trim()));
+ const listen=buttons.find(b=>b?.dataset?.action==='speak-answer'||/listen/i.test((b.textContent||'').trim()));
+ const row=(show||hide||listen)?.parentElement;
+ if(!row)return;
+ row.classList.add('backup-controls-row');
+ [show,hide,listen].filter(Boolean).forEach(button=>row.appendChild(button));
+ cue.insertAdjacentElement('beforebegin',row);
+}
 function refreshBackup(){
  const state=window.LessonEngine?.getState?.()||{};
  const item=window.LessonEngine?.getCurrent?.();
@@ -26,6 +39,7 @@ function refreshBackup(){
    box.append(b,span);practice.insertAdjacentElement('afterend',box);
   }
  }
+ arrangeBackupControls();
 }
 stage.addEventListener('click',e=>{
  const state=window.LessonEngine?.getState?.()||{};
