@@ -14,22 +14,18 @@ function arrangeBackupControls(){
   const chunks=practice?.querySelector('.backup-chunks');
   const cue=practice?.querySelector('.backup-cue');
   if(!practice||!chunks||!cue)return;
-
   let controls=practice.querySelector('.backup-inline-controls');
   if(!controls){
    controls=document.createElement('div');
    controls.className='output-actions backup-inline-controls';
   }
-
   const allButtons=[...stage.querySelectorAll('button')];
   const show=allButtons.find(b=>b.dataset.action==='show-all');
   const hide=allButtons.find(b=>b.dataset.action==='hide-more');
   const listen=allButtons.find(b=>b.dataset.action==='speak-answer');
   [show,hide,listen].filter(Boolean).forEach(button=>controls.appendChild(button));
-
   const oldRows=[...stage.querySelectorAll('.output-panel > .output-actions')].filter(row=>row!==controls);
   oldRows.forEach(row=>{if(!row.children.length)row.remove();});
-
   chunks.insertAdjacentElement('afterend',controls);
   controls.insertAdjacentElement('afterend',cue);
  }
@@ -42,22 +38,30 @@ function refreshBackup(){
  const cue=stage.querySelector('.backup-cue');
  if(cue){
   const ja=Array.isArray(item.outputJaChunks)&&item.outputJaChunks.length?item.outputJaChunks:[item.outputCue||item.translation||''].filter(Boolean);
-  cue.replaceChildren();
-  const label=document.createElement('span');label.className='backup-ja-label';label.textContent='順送り訳';
-  const line=document.createElement('span');line.className='backup-ja-line';line.textContent=ja.join(' / ');
-  cue.append(label,line);
- }
- stage.querySelectorAll('.backup-natural').forEach(n=>n.remove());
- const natural=item.outputNaturalJa||'';
- if(natural){
-  const practice=stage.querySelector('.backup-practice');
-  if(practice){
-   const box=document.createElement('div');box.className='backup-natural';
-   const b=document.createElement('b');b.textContent='自然な訳';
-   const span=document.createElement('span');span.textContent=natural;
-   box.append(b,span);practice.insertAdjacentElement('afterend',box);
+  const wanted=ja.join(' / ');
+  const current=cue.querySelector('.backup-ja-line')?.textContent||'';
+  if(current!==wanted){
+   cue.replaceChildren();
+   const label=document.createElement('span');label.className='backup-ja-label';label.textContent='順送り訳';
+   const line=document.createElement('span');line.className='backup-ja-line';line.textContent=wanted;
+   cue.append(label,line);
   }
  }
+ const natural=item.outputNaturalJa||'';
+ const existing=stage.querySelector('.backup-natural');
+ if(natural){
+  if(!existing){
+   const practice=stage.querySelector('.backup-practice');
+   if(practice){
+    const box=document.createElement('div');box.className='backup-natural';
+    const b=document.createElement('b');b.textContent='自然な訳';
+    const span=document.createElement('span');span.textContent=natural;
+    box.append(b,span);practice.insertAdjacentElement('afterend',box);
+   }
+  }else if(existing.querySelector('span')?.textContent!==natural){
+   existing.querySelector('span').textContent=natural;
+  }
+ }else if(existing){existing.remove();}
  arrangeBackupControls();
 }
 stage.addEventListener('click',e=>{
@@ -89,10 +93,16 @@ function enhance(state){
  }
  refreshBackup();
 }
+let syncScheduled=false;
 const observer=new MutationObserver(()=>{
  const state=window.LessonEngine?.getState?.()||{};
- if(state.stage!=='output')return;
- requestAnimationFrame(()=>{refreshBackup();arrangeBackupControls();});
+ if(state.stage!=='output'||syncScheduled)return;
+ syncScheduled=true;
+ requestAnimationFrame(()=>{
+  observer.disconnect();
+  try{refreshBackup();arrangeBackupControls();}
+  finally{observer.observe(stage,{childList:true,subtree:true});syncScheduled=false;}
+ });
 });
 observer.observe(stage,{childList:true,subtree:true});
 window.CloverBackupView=Object.freeze({refresh:refreshBackup});
