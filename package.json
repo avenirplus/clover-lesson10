@@ -1,0 +1,9 @@
+{
+  "name": "clover-lesson10",
+  "private": true,
+  "scripts": {
+    "validate": "node scripts/validate.cjs",
+    "export:student": "node scripts/export-student.cjs",
+    "test": "npm run validate && npm run export:student"
+  }
+}
