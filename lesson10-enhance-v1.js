@@ -4,17 +4,22 @@ const stage=document.getElementById('stage');
 if(!stage)return;
 function selected(){return String(window.getSelection?.()?.toString()||'').trim();}
 function arrangeBackupControls(){
- const cue=stage.querySelector('.backup-cue');
- if(!cue)return;
- const buttons=[...stage.querySelectorAll('button')];
- const show=buttons.find(b=>/show all/i.test((b.textContent||'').trim()));
- const hide=buttons.find(b=>/hide one more/i.test((b.textContent||'').trim()));
- const listen=buttons.find(b=>b?.dataset?.action==='speak-answer'||/listen/i.test((b.textContent||'').trim()));
- const row=(show||hide||listen)?.parentElement;
- if(!row)return;
+ const practice=stage.querySelector('.backup-practice');
+ const cue=practice?.querySelector('.backup-cue');
+ const chunks=practice?.querySelector('.backup-chunks');
+ const ready=practice?.querySelector('.backup-ready');
+ const panel=stage.querySelector('.output-panel');
+ const row=panel?.querySelector('.output-actions');
+ if(!practice||!cue||!chunks||!row)return;
+ const show=row.querySelector('[data-action="show-all"]');
+ const hide=row.querySelector('[data-action="hide-more"]');
+ const listen=row.querySelector('[data-action="speak-answer"]');
  row.classList.add('backup-controls-row');
  [show,hide,listen].filter(Boolean).forEach(button=>row.appendChild(button));
- cue.insertAdjacentElement('beforebegin',row);
+ practice.insertBefore(chunks,practice.firstChild);
+ chunks.insertAdjacentElement('afterend',row);
+ row.insertAdjacentElement('afterend',cue);
+ if(ready)cue.insertAdjacentElement('afterend',ready);
 }
 function refreshBackup(){
  const state=window.LessonEngine?.getState?.()||{};
