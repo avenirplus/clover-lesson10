@@ -3,23 +3,37 @@
 const stage=document.getElementById('stage');
 if(!stage)return;
 function selected(){return String(window.getSelection?.()?.toString()||'').trim();}
+let arranging=false;
 function arrangeBackupControls(){
- const practice=stage.querySelector('.backup-practice');
- const cue=practice?.querySelector('.backup-cue');
- const chunks=practice?.querySelector('.backup-chunks');
- const ready=practice?.querySelector('.backup-ready');
- const panel=stage.querySelector('.output-panel');
- const row=panel?.querySelector('.output-actions');
- if(!practice||!cue||!chunks||!row)return;
- const show=row.querySelector('[data-action="show-all"]');
- const hide=row.querySelector('[data-action="hide-more"]');
- const listen=row.querySelector('[data-action="speak-answer"]');
- row.classList.add('backup-controls-row');
- [show,hide,listen].filter(Boolean).forEach(button=>row.appendChild(button));
- practice.insertBefore(chunks,practice.firstChild);
- chunks.insertAdjacentElement('afterend',row);
- row.insertAdjacentElement('afterend',cue);
- if(ready)cue.insertAdjacentElement('afterend',ready);
+ if(arranging)return;
+ arranging=true;
+ try{
+  const state=window.LessonEngine?.getState?.()||{};
+  if(state.stage!=='output')return;
+  const practice=stage.querySelector('.backup-practice');
+  const chunks=practice?.querySelector('.backup-chunks');
+  const cue=practice?.querySelector('.backup-cue');
+  if(!practice||!chunks||!cue)return;
+
+  let controls=practice.querySelector('.backup-inline-controls');
+  if(!controls){
+   controls=document.createElement('div');
+   controls.className='output-actions backup-inline-controls';
+  }
+
+  const allButtons=[...stage.querySelectorAll('button')];
+  const show=allButtons.find(b=>b.dataset.action==='show-all');
+  const hide=allButtons.find(b=>b.dataset.action==='hide-more');
+  const listen=allButtons.find(b=>b.dataset.action==='speak-answer');
+  [show,hide,listen].filter(Boolean).forEach(button=>controls.appendChild(button));
+
+  const oldRows=[...stage.querySelectorAll('.output-panel > .output-actions')].filter(row=>row!==controls);
+  oldRows.forEach(row=>{if(!row.children.length)row.remove();});
+
+  chunks.insertAdjacentElement('afterend',controls);
+  controls.insertAdjacentElement('afterend',cue);
+ }
+ finally{arranging=false;}
 }
 function refreshBackup(){
  const state=window.LessonEngine?.getState?.()||{};
@@ -75,6 +89,12 @@ function enhance(state){
  }
  refreshBackup();
 }
+const observer=new MutationObserver(()=>{
+ const state=window.LessonEngine?.getState?.()||{};
+ if(state.stage!=='output')return;
+ requestAnimationFrame(()=>{refreshBackup();arrangeBackupControls();});
+});
+observer.observe(stage,{childList:true,subtree:true});
 window.CloverBackupView=Object.freeze({refresh:refreshBackup});
 window.addEventListener('lesson:render',e=>enhance(e.detail||{}));
 requestAnimationFrame(()=>enhance(window.LessonEngine?.getState?.()||{}));
