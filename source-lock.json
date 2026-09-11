@@ -1,0 +1,16 @@
+{
+  "lessonId": "clover.lesson10",
+  "status": "review",
+  "authoritative": [
+    "L10_本文.docx",
+    "L10_解答.docx",
+    "user explicit corrections"
+  ],
+  "supplementary": [
+    "CLOVER-GOLD-STANDARD.md",
+    "CLOVER-L8-GOLD-STANDARD-SOURCE-PACK.md",
+    "高校英文法_授業用ビジュアル文法.pdf",
+    "一億人の英文法 pp.1-300.pdf",
+    "一億人の英文法 p.p.301-682.pdf"
+  ]
+}
