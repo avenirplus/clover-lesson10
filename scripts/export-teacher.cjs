@@ -8,6 +8,7 @@ fs.mkdirSync(out,{recursive:true});
 
 const files=[
   'index.html',
+  'student-index.html',
   ...Array.from({length:8},(_,i)=>`lesson-data-${i+1}.js`),
   'lesson10-phrase-reading-v1.js',
   'lesson10-phrase-reading-refined.js',
@@ -21,15 +22,17 @@ const files=[
 ];
 for(const f of files) fs.copyFileSync(f,path.join(out,f));
 
-// The runtime uses lesson-data.js only to initialize the Clover source container.
+// The standalone runtime uses lesson-data.js only to initialize the Clover source container.
 // Keep that behavior under an explicit runtime-only filename in the integrated build.
 fs.copyFileSync('lesson-data.js',path.join(out,'lesson-source-init.js'));
-const exportedIndex=fs.readFileSync(path.join(out,'index.html'),'utf8')
-  .replace('<script src="lesson-data.js"></script>','<script src="lesson-source-init.js"></script>');
-fs.writeFileSync(path.join(out,'index.html'),exportedIndex);
+for(const entry of ['index.html','student-index.html']){
+  const exported=fs.readFileSync(path.join(out,entry),'utf8')
+    .replace('<script src="lesson-data.js"></script>','<script src="lesson-source-init.js"></script>');
+  fs.writeFileSync(path.join(out,entry),exported);
+}
 
 // Build a static canonical LESSON_DATA snapshot for English Classroom validation.
-// This file is not loaded by the exported runtime page.
+// This snapshot is intentionally not loaded by either runtime entry page.
 global.window={};
 for(const f of [
   'lesson-data.js',
@@ -67,4 +70,4 @@ fs.writeFileSync(
   },null,2)+'\n'
 );
 
-console.log('Teacher export created with validation snapshot');
+console.log('Teacher export created with validation snapshot and Student entry');
